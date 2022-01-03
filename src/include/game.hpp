@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "const.hpp"
 #include "snake.hpp"
@@ -22,6 +23,7 @@ class Game: public sf::Drawable {
 		sf::RectangleShape map;
 		sf::RectangleShape playArea;
 		std::vector<Score> scores;
+		sf::Music music;
 		virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	
 	public:

@@ -12,12 +12,33 @@ Game::Game(): state(STOP), username("") {
 	this->playArea.setPosition(sf::Vector2f(PLAY_AREA[0], PLAY_AREA[1]));
 	this->playArea.setSize(sf::Vector2f(PLAY_AREA[2], PLAY_AREA[3]));
 	this->playArea.setFillColor(sf::Color::Transparent);
+	std::array<float, 2> centre = { { SNAKE_INIT[0], SNAKE_INIT[1] } };
 	for (int i = 0; i < NUM_WALLS; i++) {
 		std::array<float, 4> pos = { 0, 0, WALL_WIDTH, WALL_WIDTH };
-		if (rand() % 2) pos[2] = WALL_LENGTH[0] + (float)rand() / RAND_MAX * (WALL_LENGTH[1] - WALL_LENGTH[0]);
-		else pos[3] = WALL_LENGTH[0] + (float)rand() / RAND_MAX * (WALL_LENGTH[1] - WALL_LENGTH[0]);
-		pos[0] = MAP[0] + pos[2]/2 + (float)rand() / RAND_MAX * (MAP[2] - pos[2]);
-		pos[1] = MAP[1] + pos[3]/2 + (float)rand() / RAND_MAX * (MAP[3] - pos[3]);
+		char flag;
+		do {
+			flag = 1;
+			pos[0] = 0;
+			pos[1] = 0;
+			pos[2] = WALL_WIDTH;
+			pos[3] = WALL_WIDTH;
+			if (rand() % 2) pos[2] = WALL_LENGTH[0] + (float)rand() / RAND_MAX * (WALL_LENGTH[1] - WALL_LENGTH[0]);
+			else pos[3] = WALL_LENGTH[0] + (float)rand() / RAND_MAX * (WALL_LENGTH[1] - WALL_LENGTH[0]);
+			pos[0] = MAP[0] + pos[2]/2 + (float)rand() / RAND_MAX * (MAP[2] - pos[2]);
+			pos[1] = MAP[1] + pos[3]/2 + (float)rand() / RAND_MAX * (MAP[3] - pos[3]);
+			std::array<std::array<float, 2>, 4> corners = { {
+				{ { pos[0], pos[1] } },
+				{ { pos[0] + pos[2], pos[1] } },
+				{ { pos[0], pos[1] + pos[3] } },
+				{ { pos[0] + pos[2], pos[1] + pos[3] } }
+			} };
+			for (int i = 0; i < 4; i++) {
+				if (this->getDistance(corners[i], { {0, 0} }) < WALL_FREE_ZONE) {
+					flag = 0;
+					break;
+				}
+			}
+		} while (!flag);
 		this->walls.push_back(Wall(pos));
 	}
 
@@ -33,6 +54,10 @@ Game::Game(): state(STOP), username("") {
 	this->leaderboardText.setPosition(sf::Vector2f(LEADER[0], LEADER[1]));
 	this->leaderboardText.setFont(this->font);
 	this->leaderboardText.setString(LEADERBOARD);
+
+	this->music.setLoop(1);
+	this->music.openFromFile(MUSIC[0]);
+	this->music.play();
 }
 
 Game::~Game() {
@@ -116,6 +141,7 @@ void Game::gameOver() {
 	this->popupText.setString("Score: " + std::to_string(this->snake->body.size()) + "\nPress r to restart");
 	this->state = PAUSE;
 	this->saveScore(this->snake->body.size());
+	this->music.stop();
 }
 
 void Game::typeUsername(char letter) {

@@ -5,12 +5,13 @@
 #define FRAME_RATE 30
 #define FONT_FILE "textures/arial.ttf"
 #define HS_FILE "data/score.csv"
+
 #define PAUSE 0
 #define PLAY 1
 #define STOP 2
 
 #define BORDER_WIDTH 3
-#define NUM_FRUIT 10
+#define NUM_FRUIT 15
 #define NUM_WALLS 8
 #define SNAKE_R 20
 #define SNAKE_HEAD_R 12
@@ -44,15 +45,19 @@
 #define CHR_A 97
 #define CHR_Z 122
 #define LEADER_MAX 10
+#define INDENT 20
+#define INFO_INDENT 400
+#define WALL_FREE_ZONE 200
 
-const int WINDOW[2] = { 1600, 900 };
-const int MAP[4] = { 50, 50, 1200, 800 };
-const int PLAY_AREA[4] = { MAP[0] + SNAKE_R*2 + BORDER_WIDTH, MAP[1] + SNAKE_R*2 + BORDER_WIDTH, MAP[2] - SNAKE_R*4 - 2*BORDER_WIDTH, MAP[3] - SNAKE_R*4 - 2*BORDER_WIDTH };
-const int INFO[2] = { 1300, 100 };
-const int LEADER[2] = { 1300, 500 };
-const int SNAKE_INIT[2] = { MAP[0] + MAP[2]/2, MAP[1] + MAP[3]/2 };
-const int POPUP_INIT[2] = { 450, 450 };
-const int FRUIT_INFO[2] = { 10, 3 };
-const int WALL_LENGTH[2] = { 100, 400 };
+const unsigned int WINDOW[2] = { sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height };
+const unsigned int MAP[4] = { INDENT, INDENT, WINDOW[0] - INFO_INDENT, WINDOW[1] - 2*INDENT };
+const unsigned int PLAY_AREA[4] = { MAP[0] + SNAKE_R*2 + BORDER_WIDTH, MAP[1] + SNAKE_R*2 + BORDER_WIDTH, MAP[2] - SNAKE_R*4 - 2*BORDER_WIDTH, MAP[3] - SNAKE_R*4 - 2*BORDER_WIDTH };
+const unsigned int INFO[2] = { WINDOW[0] - INFO_INDENT + 2*INDENT, INDENT };
+const unsigned int LEADER[2] = { WINDOW[0] - INFO_INDENT + 2*INDENT, WINDOW[1] / 2 };
+const unsigned int SNAKE_INIT[2] = { MAP[0] + MAP[2]/2, MAP[1] + MAP[3]/2 };
+const unsigned int POPUP_INIT[2] = { 450, 450 };
+const unsigned int FRUIT_INFO[2] = { 10, 3 };
+const unsigned int WALL_LENGTH[2] = { 200, 600 };
+const std::array<std::string, 3> MUSIC = { "libs/8BitSong.wav" };
 
 #endif

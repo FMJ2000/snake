@@ -4,7 +4,7 @@ int main() {
 	srand(time(0));
 
 	// window initialization
-	sf::RenderWindow window(sf::VideoMode(WINDOW[0], WINDOW[1]), TITLE, sf::Style::Titlebar | sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(WINDOW[0], WINDOW[1]), TITLE, sf::Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(FRAME_RATE);
 	sf::Clock clock;

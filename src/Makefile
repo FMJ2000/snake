@@ -5,7 +5,7 @@ CFLAGS = -I$(IDIR)
 ODIR = obj
 LDIR = ../lib
 
-LIBS = -lm -lsfml-graphics -lsfml-window -lsfml-system
+LIBS = -lm -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 _DEPS = main.hpp game.hpp snake.hpp fruit.hpp wall.hpp score.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))

@@ -5,6 +5,7 @@
 #include <random>
 #include <time.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "const.hpp"
 #include "game.hpp"
