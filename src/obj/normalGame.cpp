@@ -31,7 +31,13 @@ void NormalGame::update(float dt) {
 		if (amount) for (int i = 0; i < amount; i++) this->snakes[0].spawnBody();
 	}
 
-	this->scoreText.setString(this->username + "\nTime: " + std::to_string(round(this->time*100)/100) + "\nScore: " + std::to_string(this->snakes[0].body.size()) + "\nSpeed: " + std::to_string(this->snakes[0].speed));
+	snprintf(this->infoStr, INFO_LEN,
+		"%s\n"
+		"Time: %.2f\n"
+		"Score: %lu\n"
+		"Speed: %d",
+		std::string(this->username).c_str(), this->time, this->snakes[0].body.size(), this->snakes[0].speed);
+	this->scoreText.setString(std::string(this->infoStr));
 }
 
 void NormalGame::gameOver(char success) {
@@ -76,10 +82,10 @@ void NormalGame::getScores() {
 		}
 
 		// display on leaderboard
-		std::string text = LEADERBOARD;
+		int len = snprintf(this->infoStr, INFO_LEN, "%s", LEADERBOARD);
 		for (int i = 0; i < max; i++) {
-			text += std::to_string(this->scores[i].score) + "\t" + this->scores[i].username + "\n";
+			len += snprintf(this->infoStr + len, INFO_LEN - len, "\n%u\t%s", this->scores[i].score, this->scores[i].username.c_str());
 		}
-		this->leaderboardText.setString(text);
+		this->leaderboardText.setString(this->infoStr);
 	}
 }

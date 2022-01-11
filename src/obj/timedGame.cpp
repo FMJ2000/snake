@@ -3,7 +3,6 @@
 TimedGame::TimedGame(sf::Font &font): Game(font) {
 	this->gameType = GT_TIMED;
 	this->snakes.push_back(Snake());
-	std::cout << "timed init\n";
 }
 
 TimedGame::~TimedGame() {
@@ -88,9 +87,9 @@ void TimedGame::getScores() {
 		}
 
 		// display on leaderboard
-		strcpy(this->infoStr, LEADERBOARD);
+		int len = snprintf(this->infoStr, INFO_LEN, "%s", LEADERBOARD);
 		for (int i = 0; i < max; i++) {
-			snprintf(this->infoStr, INFO_LEN, "%s\n%.2f\t%s", this->infoStr, this->scores[i].time, this->scores[i].username.c_str());
+			len += snprintf(this->infoStr + len, INFO_LEN - len, "\n%.2f s\t%s", this->scores[i].time, this->scores[i].username.c_str());
 		}
 		this->leaderboardText.setString(this->infoStr);
 	}

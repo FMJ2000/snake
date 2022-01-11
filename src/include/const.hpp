@@ -36,7 +36,7 @@
 #define TIMED_MAX 50
 #define POPUP_PAUSE "Press Spacebar to play"
 #define POPUP_STOP "Welcome to Snaekkkk.\nEnter your username: "
-#define LEADERBOARD "Leaderboard:\n"
+#define LEADERBOARD "Leaderboard:"
 #define MENU "Welcome to Snaekkk.\nPress 1 for normal game.\nPress 2 for timed attack.\nPress 3 for multiplayer game."
 #define TIMED_FAIL "Timed challenge not completed - score 50 points to win"
 #define CHR_ENTER 13
