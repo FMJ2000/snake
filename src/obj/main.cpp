@@ -2,6 +2,7 @@
 
 int main() {
 	srand(time(0));
+	std::cout.precision(2);
 
 	// window initialization
 	sf::RenderWindow window(sf::VideoMode(WINDOW[0], WINDOW[1]), TITLE, sf::Style::Fullscreen);
@@ -9,7 +10,10 @@ int main() {
 	window.setFramerateLimit(FRAME_RATE);
 	sf::Clock clock;
 
-	Game * game = new Game();
+	sf::Font font;
+	font.loadFromFile(FONT_FILE);
+	Menu * menu = new Menu(font);
+	Game * game = NULL;
 
 	// game loop
 	while (window.isOpen()) {
@@ -25,36 +29,39 @@ int main() {
 				}
 
 				case sf::Event::KeyPressed: {
-					if (game->state != STOP) {
-						if (event.key.code == sf::Keyboard::R) restart(&game);
-						if (event.key.code == sf::Keyboard::Space) game->flipState();
-						if (event.key.code == sf::Keyboard::Left) game->snake->turn(-1);
-						if (event.key.code == sf::Keyboard::Right) game->snake->turn(1); 
-						if (event.key.code == sf::Keyboard::Up) game->snake->setSpeed(1);
-						if (event.key.code == sf::Keyboard::Down) game->snake->setSpeed(-1);
-					}
-					if (event.key.code == sf::Keyboard::Escape) window.close();
+					if (game) {
+						if (event.key.code == sf::Keyboard::R && game->state > ST_INIT) restart(&game, font);
+						else if (event.key.code == sf::Keyboard::Escape) {
+							delete game;
+							game = NULL;
+						} else game->handleInput(event.key.code, 1);
+					} else if (event.key.code == sf::Keyboard::Escape) window.close();
+					else if (event.key.code == sf::Keyboard::Num1) game = new NormalGame(font);
+					else if (event.key.code == sf::Keyboard::Num2) game = new TimedGame(font);
 					break;
 				}
 
 				case sf::Event::KeyReleased: {
-					if (game->state != STOP) game->snake->turn(0);
+					if (game) game->handleInput(event.key.code, 0);
+					break;
+				}		
+
+				case sf::Event::EventType::TextEntered: {
+					if (game) game->typeUsername(static_cast<char>(event.text.unicode));
 					break;
 				}
 
-				case sf::Event::EventType::TextEntered: {
-					if (game->state == STOP && event.text.unicode < 128) game->typeUsername(static_cast<char>(event.text.unicode));
-					break;
-				}
 			}
 		}
 
 		window.setKeyRepeatEnabled(false);
 
 		// game update and draw
-		game->update(dt);
 		window.clear(sf::Color(BACKGROUND));
-		window.draw(*game);
+		if (game) {
+			game->update(dt);
+			window.draw(*game);
+		} else window.draw(*menu);
 		window.display();
 	}
 
@@ -62,8 +69,10 @@ int main() {
 	return 0;
 }
 
-void restart(Game ** game) {
-	delete *game;
-	*game = new Game();
-	(*game)->username = "";
+void restart(Game ** game, sf::Font &font) {
+	GameType gameType = (*game)->gameType;
+	delete (*game);
+	*game = NULL;
+	if (gameType == GT_NORMAL) *game = new NormalGame(font);
+	else if (gameType == GT_TIMED) *game = new TimedGame(font);
 }

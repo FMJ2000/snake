@@ -39,7 +39,6 @@ void Snake::update(float dt) {
 	this->time += dt;
 	if (this->time >= LOG_T) {
 		this->log.push_back(this->pos);
-		//std::cout << this->log[this->log.size() - 1][0] << ", " << this->log[this->log.size() - 1][1] << ", " << this->log[this->log.size() - 1][2] << std::endl;
 		this->time -= LOG_T;
 	}
 

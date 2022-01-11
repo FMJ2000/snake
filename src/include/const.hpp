@@ -4,11 +4,8 @@
 #define TITLE "snaekkkk"
 #define FRAME_RATE 30
 #define FONT_FILE "textures/arial.ttf"
-#define HS_FILE "data/score.csv"
-
-#define PAUSE 0
-#define PLAY 1
-#define STOP 2
+#define NHS_FILE "data/normalScore.csv"
+#define THS_FILE "data/timedScore.csv"
 
 #define BORDER_WIDTH 3
 #define NUM_FRUIT 15
@@ -26,17 +23,22 @@
 #define WALL_WIDTH 50
 #define MAX_ITER 20
 #define SPAWN_T 3
+#define DEL_TEXT 0.5
+#define INFO_LEN 1024
 
 #define BACKGROUND 0x000033ff
 #define MAP_COL 0x567d46ff
 #define SNAKE_COL 0x880808ff
-#define SNAKE_SPAWN_COL 0x8808087f
+#define SNAKE_SPAWN_COL 0x8808084f
 #define FRUIT_COL 0x6f2da8ff
 #define WALL_COL 0x006400ff
 
+#define TIMED_MAX 50
 #define POPUP_PAUSE "Press Spacebar to play"
 #define POPUP_STOP "Welcome to Snaekkkk.\nEnter your username: "
 #define LEADERBOARD "Leaderboard:\n"
+#define MENU "Welcome to Snaekkk.\nPress 1 for normal game.\nPress 2 for timed attack.\nPress 3 for multiplayer game."
+#define TIMED_FAIL "Timed challenge not completed - score 50 points to win"
 #define CHR_ENTER 13
 #define CHR_SPACE 32
 #define CHR_BACKSPACE '\b'
@@ -49,6 +51,8 @@
 #define INFO_INDENT 400
 #define WALL_FREE_ZONE 200
 
+enum State { ST_MENU, ST_INIT, ST_PLAY, ST_PAUSE, ST_STOP };
+enum GameType { GT_NORMAL, GT_TIMED, GT_MULTIPLAYER };
 const unsigned int WINDOW[2] = { sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height };
 const unsigned int MAP[4] = { INDENT, INDENT, WINDOW[0] - INFO_INDENT, WINDOW[1] - 2*INDENT };
 const unsigned int PLAY_AREA[4] = { MAP[0] + SNAKE_R*2 + BORDER_WIDTH, MAP[1] + SNAKE_R*2 + BORDER_WIDTH, MAP[2] - SNAKE_R*4 - 2*BORDER_WIDTH, MAP[3] - SNAKE_R*4 - 2*BORDER_WIDTH };

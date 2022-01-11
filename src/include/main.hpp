@@ -8,8 +8,11 @@
 #include <SFML/Audio.hpp>
 
 #include "const.hpp"
+#include "menu.hpp"
 #include "game.hpp"
+#include "normalGame.hpp"
+#include "timedGame.hpp"
 
-void restart(Game ** game);
+void restart(Game ** game, sf::Font &font);
 
 #endif

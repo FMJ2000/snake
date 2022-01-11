@@ -5,6 +5,8 @@
 #include <random>
 #include <vector>
 #include <fstream>
+#include <string>
+#include <cstring>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -14,8 +16,14 @@
 #include "wall.hpp"
 #include "score.hpp"
 
-class Game: public sf::Drawable {
+class Game: public sf::Drawable {	
 	private:
+		virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+	
+	public:
+		float time;
+		char infoStr[INFO_LEN];
+		GameType gameType;
 		sf::Font font;
 		sf::Text scoreText;
 		sf::Text leaderboardText;
@@ -24,21 +32,25 @@ class Game: public sf::Drawable {
 		sf::RectangleShape playArea;
 		std::vector<Score> scores;
 		sf::Music music;
-		virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-	
-	public:
-		Snake * snake;
+		State state;
+		std::vector<Snake> snakes;
 		std::vector<Fruit> fruits;
 		std::vector<Wall> walls;
 		sf::String username;
-		char state;
-		Game();
+
+		Game(sf::Font &font);
 		~Game();
-		void update(float dt);
+		virtual void handleInput(sf::Keyboard::Key code, char pressed);
+		virtual void update(float dt);
+		virtual void gameOver(char success);
+		virtual void getScores();
+		virtual void saveScore(unsigned int score);
+		void buildWalls();
+		char checkCollisionMap(sf::CircleShape body);
+		char checkCollisionSnake(sf::CircleShape body, Snake snake);
+		int checkCollisionFruit(sf::CircleShape body);
+		void spawnFruit();
 		float getDistance(std::array<float, 2> pos1, std::array<float, 2> pos2);
-		void gameOver();
-		void getScores();
-		void saveScore(unsigned int score);
 		void typeUsername(char letter);
 		void flipState();
 };
