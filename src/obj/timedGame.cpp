@@ -44,10 +44,11 @@ void TimedGame::update(float dt) {
 void TimedGame::gameOver(char success) {
 	Game::gameOver(success);
 	if (success) {
-		this->popupText.setString("Time: " + std::to_string(round(this->time*100)/100) + "\nPress r to restart");
+		snprint(this->infoStr, INFO_LEN, "%s\nTime: %.2f\nPress r to restart", TIMED_SUCCESS_MSG, this->time);
+		this->popupText.setString(this->infoStr);
 		this->saveScore(this->snakes[0].body.size());
 	} else {
-		this->popupText.setString(TIMED_FAIL);
+		this->popupText.setString(TIMED_FAIL_MSG);
 	}	
 }
 

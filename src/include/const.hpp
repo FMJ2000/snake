@@ -39,7 +39,8 @@
 #define POPUP_STOP "Welcome to Snaekkkk.\nEnter your username: "
 #define LEADERBOARD "Leaderboard:"
 #define MENU "Welcome to Snaekkk.\nPress 1 for normal game.\nPress 2 for timed attack.\nPress 3 for multiplayer game."
-#define TIMED_FAIL "Timed challenge not completed - score 50 points to win"
+#define TIMED_FAIL_MSG "Timed challenge not completed - score 50 points to win\nPress r to restart"
+#define TIMED_SUCCESS_MSG "Congratulations! Timed challenge complete."
 #define CHR_ENTER 13
 #define CHR_SPACE 32
 #define CHR_BACKSPACE '\b'
@@ -51,7 +52,7 @@
 #define INDENT 20
 #define INFO_INDENT 400
 #define WALL_FREE_ZONE 200
-#define NUM_SONGS 3
+#define NUM_SONGS 5
 #define NUM_SOUNDS 3
 
 enum State { ST_MENU, ST_INIT, ST_PLAY, ST_PAUSE, ST_STOP };
@@ -66,7 +67,7 @@ const unsigned int SNAKE_INIT[2] = { MAP[0] + MAP[2]/2, MAP[1] + MAP[3]/2 };
 const unsigned int POPUP_INIT[2] = { 450, 450 };
 const unsigned int FRUIT_INFO[2] = { 10, 3 };
 const unsigned int WALL_LENGTH[2] = { 200, 600 };
-const std::array<std::string, NUM_SONGS> MUSIC = { { "libs/ArpBoi.wav", "libs/8BitSong.wav", "libs/Beatz.wav" } };
+const std::array<std::string, NUM_SONGS> MUSIC = { { "libs/ArpBoi.wav", "libs/8BitSong.wav", "libs/Beatz.wav", "libs/SoftKeyz.wav", "libs/TechnoRave.wav" } };
 const std::array<std::string, NUM_SOUNDS> SOUNDS = { { "libs/eat.wav", "libs/crash.wav", "libs/select.wav" } };
 
 #endif
