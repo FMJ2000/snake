@@ -61,18 +61,18 @@ void Game::update(float dt) {
 			int amount = Game::checkCollisionFruit(this->snakes[i].body[0]);
 			for (int j = 0; j < amount; j++) this->snakes[i].spawnBody();	
 		}
-	}
 
-	if (floor(this->time) < floor(this->time + dt)) {
-		sf::SoundSource::Status musicStat = this->music[this->currentSong]->getStatus();
-		if (this->state == ST_PLAY) {
-			if (musicStat != sf::SoundSource::Status::Playing) {
-				this->currentSong = rand() % this->music.size();
-				this->music[this->currentSong]->play();
+		if (floor(this->time) < floor(this->time + dt)) {
+			sf::SoundSource::Status musicStat = this->music[this->currentSong]->getStatus();
+			if (this->state == ST_PLAY) {
+				if (musicStat != sf::SoundSource::Status::Playing) {
+					this->currentSong = rand() % this->music.size();
+					this->music[this->currentSong]->play();
+				}
 			}
-		} else if (musicStat == sf::SoundSource::Status::Playing) this->music[this->currentSong]->pause();
+		}
 	}
-	this->time += dt;
+	if (this->state == ST_PLAY || this->state == ST_INIT) this->time += dt;
 }
 
 void Game::buildWalls() {
@@ -196,6 +196,7 @@ void Game::typeUsername(char letter) {
 		if (letter == CHR_ENTER) {
 			this->getScores();
 			this->state = ST_PLAY;
+			this->time = 0;
 		} else if (this->gameType != GT_MULTIPLAYER) {
 			if (letter == CHR_BACKSPACE && this->username.getSize() > 0) this->username.erase(this->username.getSize() - 1, 1);
 			else this->username += letter;	
@@ -209,6 +210,7 @@ void Game::flipState() {
 	else if (this->state = ST_PLAY) {
 		this->state = ST_PAUSE;
 		this->popupText.setString(POPUP_PAUSE);
+		this->music[this->currentSong]->pause();
 	}
 }
 

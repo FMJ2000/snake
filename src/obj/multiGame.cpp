@@ -5,6 +5,8 @@ MultiGame::MultiGame(sf::Font &font): Game(font) {
 	this->snakes.push_back(Snake(0));
 	this->snakes.push_back(Snake(1));
 	this->popupText.setString(POPUP_MULTI_STOP);
+	this->keysPressed.push_back({{ 0, 0 }});
+	this->keysPressed.push_back({{ 0, 0 }});
 }
 
 MultiGame::~MultiGame() {
@@ -15,19 +17,26 @@ void MultiGame::handleInput(sf::Keyboard::Key code, char pressed) {
 	Game::handleInput(code, pressed);
 
 	if (pressed) {
-		if (code == sf::Keyboard::Left) this->snakes[0].turn(-1);
-		if (code == sf::Keyboard::Right) this->snakes[0].turn(1); 
+		if (code == sf::Keyboard::Left) this->keysPressed[0][0] = 1;
+		if (code == sf::Keyboard::Right) this->keysPressed[0][1] = 1;
 		if (code == sf::Keyboard::Up) this->snakes[0].setSpeed(1);
 		if (code == sf::Keyboard::Down) this->snakes[0].setSpeed(-1);
 
-		if (code == sf::Keyboard::A) this->snakes[1].turn(-1);
-		if (code == sf::Keyboard::D) this->snakes[1].turn(1); 
+		if (code == sf::Keyboard::A) this->keysPressed[1][0] = 1;
+		if (code == sf::Keyboard::D) this->keysPressed[1][1] = 1;
 		if (code == sf::Keyboard::W) this->snakes[1].setSpeed(1);
 		if (code == sf::Keyboard::S) this->snakes[1].setSpeed(-1);
-	} else if (code == sf::Keyboard::Left || code == sf::Keyboard::Right) {
-		this->snakes[0].turn(0);
-	} else if (code == sf::Keyboard::A || code == sf::Keyboard::D) {
-		this->snakes[1].turn(0);
+	} else {
+		if (code == sf::Keyboard::Left) this->keysPressed[0][0] = 0;
+		if (code == sf::Keyboard::Right) this->keysPressed[0][1] = 0;
+		if (code == sf::Keyboard::A) this->keysPressed[1][0] = 0;
+		if (code == sf::Keyboard::W) this->keysPressed[1][1] = 0;
+	}
+
+	for (int i = 0; i < this->snakes.size(); i++) {
+		if (this->keysPressed[i][0]) this->snakes[i].turn(-1);
+		else if (this->keysPressed[i][1]) this->snakes[i].turn(1); 
+		else this->snakes[i].turn(0);
 	}
 }
 

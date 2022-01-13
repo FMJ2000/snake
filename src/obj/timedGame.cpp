@@ -3,6 +3,7 @@
 TimedGame::TimedGame(sf::Font &font): Game(font) {
 	this->gameType = GT_TIMED;
 	this->snakes.push_back(Snake());
+	this->keysPressed.push_back({{ 0, 0 }});
 }
 
 TimedGame::~TimedGame() {
@@ -13,12 +14,19 @@ void TimedGame::handleInput(sf::Keyboard::Key code, char pressed) {
 	Game::handleInput(code, pressed);
 
 	if (pressed) {
-		if (code == sf::Keyboard::Left) this->snakes[0].turn(-1);
-		if (code == sf::Keyboard::Right) this->snakes[0].turn(1); 
+		if (code == sf::Keyboard::Left) this->keysPressed[0][0] = 1;
+		if (code == sf::Keyboard::Right) this->keysPressed[0][1] = 1;
 		if (code == sf::Keyboard::Up) this->snakes[0].setSpeed(1);
 		if (code == sf::Keyboard::Down) this->snakes[0].setSpeed(-1);
-	} else if (code == sf::Keyboard::Left || code == sf::Keyboard::Right) {
-		this->snakes[0].turn(0);
+	} else {
+		if (code == sf::Keyboard::Left) this->keysPressed[0][0] = 0;
+		if (code == sf::Keyboard::Right) this->keysPressed[0][1] = 0;
+	}
+
+	for (int i = 0; i < this->snakes.size(); i++) {
+		if (this->keysPressed[i][0]) this->snakes[i].turn(-1);
+		else if (this->keysPressed[i][1]) this->snakes[i].turn(1); 
+		else this->snakes[i].turn(0);
 	}
 }
 

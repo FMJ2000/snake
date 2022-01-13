@@ -40,6 +40,7 @@ class Game: public sf::Drawable {
 		sf::String username;
 		std::array<sf::SoundBuffer, 2> soundBuffer;
 		std::array<sf::Sound, 2> sound;
+		std::vector<std::array<char, 2>> keysPressed;
 
 		Game(sf::Font &font);
 		~Game();
