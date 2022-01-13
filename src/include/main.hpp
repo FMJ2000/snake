@@ -12,6 +12,7 @@
 #include "game.hpp"
 #include "normalGame.hpp"
 #include "timedGame.hpp"
+#include "multiGame.hpp"
 
 void restart(Game ** game, sf::Font &font);
 

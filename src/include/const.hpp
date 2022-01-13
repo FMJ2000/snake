@@ -29,14 +29,17 @@
 
 #define BACKGROUND 0x000033ff
 #define MAP_COL 0x567d46ff
-#define SNAKE_COL 0x880808ff
-#define SNAKE_SPAWN_COL 0x8808084f
+#define SNAKE_COL1 0x880808ff
+#define SNAKE_COL2 0x02075dff
+#define SNAKE_SPAWN_COL1 0x8808084f
+#define SNAKE_SPAWN_COL2 0x02075d4f
 #define FRUIT_COL 0x6f2da8ff
 #define WALL_COL 0x006400ff
 
 #define TIMED_MAX 50
 #define POPUP_PAUSE "Press Spacebar to play"
 #define POPUP_STOP "Welcome to Snaekkkk.\nEnter your username: "
+#define POPUP_MULTI_STOP "Multiplayer Game.\nPress enter to start!"
 #define LEADERBOARD "Leaderboard:"
 #define MENU "Welcome to Snaekkk.\nPress 1 for normal game.\nPress 2 for timed attack.\nPress 3 for multiplayer game."
 #define TIMED_FAIL_MSG "Timed challenge not completed - score 50 points to win\nPress r to restart"

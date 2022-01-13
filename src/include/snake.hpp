@@ -13,6 +13,7 @@
 
 class Snake: public sf::Drawable {
 	private:
+		char index;
 		int turnState;
 		float time;
 		std::vector<std::array<float, 3>> log;
@@ -24,7 +25,7 @@ class Snake: public sf::Drawable {
 		std::vector<sf::CircleShape> body;
 		std::vector<float> bodyTime;
 		sf::CircleShape head;
-		Snake();
+		Snake(char index = 0);
 		~Snake();
 		void spawnBody();
 		void update(float dt);

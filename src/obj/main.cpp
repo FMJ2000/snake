@@ -44,6 +44,7 @@ int main() {
 					} else if (event.key.code == sf::Keyboard::Escape) window.close();
 					else if (event.key.code == sf::Keyboard::Num1) game = new NormalGame(font);
 					else if (event.key.code == sf::Keyboard::Num2) game = new TimedGame(font);
+					else if (event.key.code == sf::Keyboard::Num3) game = new MultiGame(font);
 					selectSound.play();
 					break;
 				}
@@ -82,4 +83,5 @@ void restart(Game ** game, sf::Font &font) {
 	*game = NULL;
 	if (gameType == GT_NORMAL) *game = new NormalGame(font);
 	else if (gameType == GT_TIMED) *game = new TimedGame(font);
+	else if (gameType == GT_MULTIPLAYER) *game = new MultiGame(font);
 }

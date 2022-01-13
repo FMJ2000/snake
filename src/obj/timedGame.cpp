@@ -17,7 +17,9 @@ void TimedGame::handleInput(sf::Keyboard::Key code, char pressed) {
 		if (code == sf::Keyboard::Right) this->snakes[0].turn(1); 
 		if (code == sf::Keyboard::Up) this->snakes[0].setSpeed(1);
 		if (code == sf::Keyboard::Down) this->snakes[0].setSpeed(-1);
-	} else this->snakes[0].turn(0);
+	} else if (code == sf::Keyboard::Left || code == sf::Keyboard::Right) {
+		this->snakes[0].turn(0);
+	}
 }
 
 void TimedGame::update(float dt) {
@@ -25,11 +27,8 @@ void TimedGame::update(float dt) {
 
 	if (this->state == ST_PLAY) {
 		spawnFruit();
-		for (int i = 0; i < this->snakes.size(); i++) this->snakes[i].update(dt);
 		if (Game::checkCollisionMap(this->snakes[0].body[0]) || Game::checkCollisionSnake(this->snakes[0].body[0], this->snakes[0])) this->gameOver(0);
 		if (this->snakes[0].body.size() >= TIMED_MAX) this->gameOver(1);
-		int amount = Game::checkCollisionFruit(this->snakes[0].body[0]);
-		if (amount) for (int i = 0; i < amount; i++) this->snakes[0].spawnBody();
 	}
 
 	snprintf(this->infoStr, INFO_LEN,
@@ -38,13 +37,13 @@ void TimedGame::update(float dt) {
 		"Score: %lu\n"
 		"Speed: %d",
 		std::string(this->username).c_str(), this->time, this->snakes[0].body.size(), this->snakes[0].speed);
-	this->scoreText.setString(std::string(this->infoStr));
+	this->scoreText.setString(this->infoStr);
 }
 
 void TimedGame::gameOver(char success) {
 	Game::gameOver(success);
 	if (success) {
-		snprint(this->infoStr, INFO_LEN, "%s\nTime: %.2f\nPress r to restart", TIMED_SUCCESS_MSG, this->time);
+		snprintf(this->infoStr, INFO_LEN, "%s\nTime: %.2f\nPress r to restart", TIMED_SUCCESS_MSG, this->time);
 		this->popupText.setString(this->infoStr);
 		this->saveScore(this->snakes[0].body.size());
 	} else {

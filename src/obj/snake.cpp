@@ -1,6 +1,6 @@
 #include "../include/snake.hpp"
 
-Snake::Snake(): turnState(0), speed(1) {
+Snake::Snake(char index): index(index), turnState(0), speed(1) {
 	this->pos[0] = SNAKE_INIT[0];
 	this->pos[1] = SNAKE_INIT[1];
 	this->pos[2] = 0;
@@ -19,7 +19,7 @@ Snake::~Snake() {
 void Snake::spawnBody() {
 	this->body.push_back(sf::CircleShape());
 	this->bodyTime.push_back(0);
-	this->body[this->body.size() - 1].setFillColor(sf::Color(SNAKE_COL));
+	this->body[this->body.size() - 1].setFillColor(sf::Color((this->index) ? SNAKE_COL2 : SNAKE_COL1));
 	this->body[this->body.size() - 1].setRadius(SNAKE_R);
 	this->body[this->body.size() - 1].setOrigin(sf::Vector2f(SNAKE_R, SNAKE_R));
 	this->body[this->body.size() - 1].setPointCount(6);
@@ -55,8 +55,8 @@ void Snake::update(float dt) {
 		this->body[i].setPosition(sf::Vector2f(bodyPos[0], bodyPos[1]));
 		this->body[i].setRotation(bodyPos[2] * 180.0 / M_PI - 30.0);
 		this->bodyTime[i] += dt;
-		if (this->bodyTime[i] < SPAWN_T) this->body[i].setFillColor(sf::Color(SNAKE_SPAWN_COL));
-		else this->body[i].setFillColor(sf::Color(SNAKE_COL));
+		if (this->bodyTime[i] < SPAWN_T) this->body[i].setFillColor(sf::Color((this->index) ? SNAKE_SPAWN_COL2 : SNAKE_SPAWN_COL1));
+		else this->body[i].setFillColor(sf::Color((this->index) ? SNAKE_COL2 : SNAKE_COL1));
 	}
 }
 

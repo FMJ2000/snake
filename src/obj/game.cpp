@@ -51,11 +51,18 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	target.draw(this->leaderboardText);
 	if (this->state == ST_PLAY) {
 		target.draw(this->scoreText);
-		
 	}	else target.draw(this->popupText);
 }
 
 void Game::update(float dt) {
+	if (this->state == ST_PLAY) {
+		for (int i = 0; i < this->snakes.size(); i++) {
+			this->snakes[i].update(dt);
+			int amount = Game::checkCollisionFruit(this->snakes[i].body[0]);
+			for (int j = 0; j < amount; j++) this->snakes[i].spawnBody();	
+		}
+	}
+
 	if (floor(this->time) < floor(this->time + dt)) {
 		sf::SoundSource::Status musicStat = this->music[this->currentSong]->getStatus();
 		if (this->state == ST_PLAY) {
@@ -189,7 +196,7 @@ void Game::typeUsername(char letter) {
 		if (letter == CHR_ENTER) {
 			this->getScores();
 			this->state = ST_PLAY;
-		} else {
+		} else if (this->gameType != GT_MULTIPLAYER) {
 			if (letter == CHR_BACKSPACE && this->username.getSize() > 0) this->username.erase(this->username.getSize() - 1, 1);
 			else this->username += letter;	
 			this->popupText.setString(POPUP_STOP + std::string(this->username));
