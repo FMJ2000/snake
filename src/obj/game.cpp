@@ -1,6 +1,6 @@
 #include "../include/game.hpp"
 
-Game::Game(sf::Font &font): state(ST_INIT), username(""), font(font), time(0) {
+Game::Game(sf::Font &font): state(ST_INIT), username(""), font(font), time(0), currentSong(rand() % NUM_SONGS) {
 	// map and walls
 	this->map.setPosition(sf::Vector2f(MAP[0], MAP[1]));
 	this->map.setSize(sf::Vector2f(MAP[2], MAP[3]));
@@ -24,13 +24,19 @@ Game::Game(sf::Font &font): state(ST_INIT), username(""), font(font), time(0) {
 	this->leaderboardText.setFont(this->font);
 	this->leaderboardText.setString(LEADERBOARD);
 
-	this->music.setLoop(1);
-	this->music.openFromFile(MUSIC[0]);
-	this->music.play();
+	for (int i = 0; i < NUM_SONGS; i++) {
+		this->music[i] = new sf::Music();
+		this->music[i]->openFromFile(MUSIC[i]);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		this->soundBuffer[i].loadFromFile(SOUNDS[i]);
+		this->sound[i].setBuffer(this->soundBuffer[i]);
+	}
 }
 
 Game::~Game() {
-
+	for (int i = 0; i < NUM_SONGS; i++) delete this->music[i];
 }
 
 void Game::handleInput(sf::Keyboard::Key code, char pressed) {
@@ -50,11 +56,20 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 void Game::update(float dt) {
+	if (floor(this->time) < floor(this->time + dt)) {
+		sf::SoundSource::Status musicStat = this->music[this->currentSong]->getStatus();
+		if (this->state == ST_PLAY) {
+			if (musicStat != sf::SoundSource::Status::Playing) {
+				this->currentSong = rand() % this->music.size();
+				this->music[this->currentSong]->play();
+			}
+		} else if (musicStat == sf::SoundSource::Status::Playing) this->music[this->currentSong]->pause();
+	}
 	this->time += dt;
 }
 
 void Game::buildWalls() {
-	std::array<float, 2> centre = { { SNAKE_INIT[0], SNAKE_INIT[1] } };
+	std::array<float, 2> centre = { { (float)SNAKE_INIT[0], (float)SNAKE_INIT[1] } };
 	for (int i = 0; i < NUM_WALLS; i++) {
 		std::array<float, 4> pos = { 0, 0, WALL_WIDTH, WALL_WIDTH };
 		char flag;
@@ -88,14 +103,19 @@ void Game::buildWalls() {
 char Game::checkCollisionMap(sf::CircleShape body) {
 	// map
 	std::array<float, 2> pos = { body.getPosition().x, body.getPosition().y };
-	if (!this->playArea.getGlobalBounds().intersects(body.getGlobalBounds())) return 1;
+	if (!this->playArea.getGlobalBounds().intersects(body.getGlobalBounds())) {
+		this->sound[SI_CRASH].play();
+		return 1;
+	}
 
 	// walls
 	for (int i = 0; i < this->walls.size(); i++) {
 		sf::FloatRect rect = this->walls[i].shape.getGlobalBounds();
-		if ((pos[0] > rect.left - SNAKE_R && pos[0] < rect.left + rect.width + SNAKE_R && pos[1] > rect.top && pos[1] < rect.top + rect.height) ||
-			(pos[0] > rect.left && pos[0] < rect.left + rect.width && pos[1] > rect.top - SNAKE_R && pos[1] < rect.top + rect.height + SNAKE_R))
+		if ((pos[0] > rect.left - SNAKE_R * SNAKE_COL_F && pos[0] < rect.left + rect.width + SNAKE_R * SNAKE_COL_F && pos[1] > rect.top && pos[1] < rect.top + rect.height) ||
+			(pos[0] > rect.left && pos[0] < rect.left + rect.width && pos[1] > rect.top - SNAKE_R * SNAKE_COL_F && pos[1] < rect.top + rect.height + SNAKE_R * SNAKE_COL_F)) {
+			this->sound[SI_CRASH].play();
 			return 1;
+		}
 	}
 
 	return 0;
@@ -106,7 +126,10 @@ char Game::checkCollisionSnake(sf::CircleShape body, Snake snake) {
 	for (int i = 1; i < snake.body.size(); i++) {
 		if (snake.bodyTime[i] > SPAWN_T) {
 			std::array<float, 2> pos2 = { snake.body[i].getPosition().x, snake.body[i].getPosition().y };
-			if (this->getDistance(pos, pos2) < SNAKE_R + COL_MOD) return 1;
+			if (this->getDistance(pos, pos2) < SNAKE_R + COL_MOD) {
+				this->sound[SI_CRASH].play();
+				return 1;
+			}
 		}
 	}
 
@@ -118,6 +141,7 @@ int Game::checkCollisionFruit(sf::CircleShape body) {
 		if (this->fruits[i].shape.getGlobalBounds().intersects(body.getGlobalBounds())) {
 			int amount = this->fruits[i].amount;
 			this->fruits.erase(this->fruits.begin() + i);
+			this->sound[SI_EAT].play();
 			return amount;
 		}
 	}
@@ -158,7 +182,6 @@ float Game::getDistance(std::array<float, 2> pos1, std::array<float, 2> pos2) {
 void Game::gameOver(char success) {
 	this->fruits.clear();
 	this->state = ST_PAUSE;
-	this->music.stop();
 }
 
 void Game::typeUsername(char letter) {

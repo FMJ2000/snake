@@ -2,7 +2,6 @@
 
 int main() {
 	srand(time(0));
-	std::cout.precision(2);
 
 	// window initialization
 	sf::RenderWindow window(sf::VideoMode(WINDOW[0], WINDOW[1]), TITLE, sf::Style::Fullscreen);
@@ -14,6 +13,10 @@ int main() {
 	font.loadFromFile(FONT_FILE);
 	Menu * menu = new Menu(font);
 	Game * game = NULL;
+	sf::SoundBuffer buffer;
+	buffer.loadFromFile(SOUNDS[SI_SELECT]);
+	sf::Sound selectSound;
+	selectSound.setBuffer(buffer);
 
 	// game loop
 	while (window.isOpen()) {
@@ -34,10 +37,14 @@ int main() {
 						else if (event.key.code == sf::Keyboard::Escape) {
 							delete game;
 							game = NULL;
-						} else game->handleInput(event.key.code, 1);
+						} else {
+							game->handleInput(event.key.code, 1);
+							break;
+						}
 					} else if (event.key.code == sf::Keyboard::Escape) window.close();
 					else if (event.key.code == sf::Keyboard::Num1) game = new NormalGame(font);
 					else if (event.key.code == sf::Keyboard::Num2) game = new TimedGame(font);
+					selectSound.play();
 					break;
 				}
 

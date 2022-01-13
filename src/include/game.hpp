@@ -31,12 +31,15 @@ class Game: public sf::Drawable {
 		sf::RectangleShape map;
 		sf::RectangleShape playArea;
 		std::vector<Score> scores;
-		sf::Music music;
+		std::array<sf::Music *, NUM_SONGS> music;
+		unsigned int currentSong;
 		State state;
 		std::vector<Snake> snakes;
 		std::vector<Fruit> fruits;
 		std::vector<Wall> walls;
 		sf::String username;
+		std::array<sf::SoundBuffer, 2> soundBuffer;
+		std::array<sf::Sound, 2> sound;
 
 		Game(sf::Font &font);
 		~Game();
